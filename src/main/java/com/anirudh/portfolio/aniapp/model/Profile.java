@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.List;
+
 @Entity
 @Table(name = "PROFILE")
 @Data
@@ -30,6 +32,12 @@ public class Profile {
     private String github;
     @Column(name = "LINKEDIN_PROFILE")
     private String linkedin;
+    @OneToMany()
+    @JoinColumn(name = "PROFILE_ID",referencedColumnName = "id")
+    private List<Skill> skills;
+    @OneToMany
+    @JoinColumn(name = "PROFILE_ID",referencedColumnName = "id")
+    private List<LanguageProficiency> languages;
 
 
 }
