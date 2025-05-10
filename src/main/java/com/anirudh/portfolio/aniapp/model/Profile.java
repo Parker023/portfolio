@@ -7,14 +7,14 @@ import lombok.ToString;
 import java.util.List;
 
 @Entity
-@Table(name = "PROFILE")
+@Table(name = "PROFILE",schema = "portfolio")
 @Data
-@ToString
 public class Profile {
     @Id
     @SequenceGenerator(name = "profile_generator", allocationSize = 5, sequenceName = "profile_sequence",schema = "portfolio")
     @GeneratedValue(generator = "profile_generator", strategy = GenerationType.SEQUENCE)
-    private int id;
+    @Column(name = "PROFILE_ID")
+    private int profileId;
     @Column(name = "FIRST_NAME",nullable = false,length = 50)
     private String firstName;
     @Column(name = "LAST_NAME", length = 50)
@@ -32,10 +32,10 @@ public class Profile {
     @Column(name = "LINKEDIN_PROFILE")
     private String linkedin;
     @OneToMany()
-    @JoinColumn(name = "PROFILE_ID",referencedColumnName = "id")
+    @JoinColumn(name = "PROFILE_ID_FK",referencedColumnName = "PROFILE_ID")
     private List<Skill> skills;
     @OneToMany
-    @JoinColumn(name = "PROFILE_ID",referencedColumnName = "id")
+    @JoinColumn(name = "PROFILE_ID_FK",referencedColumnName = "PROFILE_ID")
     private List<LanguageProficiency> languages;
 
 
