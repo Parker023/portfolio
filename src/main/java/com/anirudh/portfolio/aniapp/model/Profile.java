@@ -2,8 +2,6 @@ package com.anirudh.portfolio.aniapp.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.ToString;
-
 import java.util.List;
 
 @Entity
