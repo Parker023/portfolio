@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class LanguageProficiency {
     @Id
-    @SequenceGenerator(name = "lang_prof_generator", initialValue = 1, allocationSize = 5, sequenceName = "language_proficiency_sequence", schema = "portfolio")
+    @SequenceGenerator(name = "lang_prof_generator", allocationSize = 5, sequenceName = "language_proficiency_sequence", schema = "portfolio")
     @GeneratedValue(generator = "lang_prof_generator", strategy = GenerationType.SEQUENCE)
     private int id;
     @Column(name = "LANGUAGE", nullable = false)

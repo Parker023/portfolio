@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class Skill {
     @Id
-    @SequenceGenerator(name = "skill_generator", initialValue = 1, allocationSize = 5, sequenceName = "skill_sequence", schema = "portfolio")
+    @SequenceGenerator(name = "skill_generator", allocationSize = 5, sequenceName = "skill_sequence", schema = "portfolio")
     @GeneratedValue(generator = "skill_generator", strategy = GenerationType.SEQUENCE)
     private int id;
     @Column(name = "SKILL_NAME", nullable = false)

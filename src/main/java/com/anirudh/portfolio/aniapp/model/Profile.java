@@ -2,7 +2,6 @@ package com.anirudh.portfolio.aniapp.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 import lombok.ToString;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 @ToString
 public class Profile {
     @Id
-    @SequenceGenerator(name = "profile_generator", initialValue = 1, allocationSize = 5, sequenceName = "profile_sequence",schema = "portfolio")
+    @SequenceGenerator(name = "profile_generator", allocationSize = 5, sequenceName = "profile_sequence",schema = "portfolio")
     @GeneratedValue(generator = "profile_generator", strategy = GenerationType.SEQUENCE)
     private int id;
     @Column(name = "FIRST_NAME",nullable = false,length = 50)
