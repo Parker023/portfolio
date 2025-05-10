@@ -1,5 +1,6 @@
 package com.anirudh.portfolio.aniapp.model;
 
+import com.anirudh.portfolio.aniapp.dto.LanguageProficiencyDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,4 +17,11 @@ public class LanguageProficiency {
     private String name;
     @Column(name = "LANGUAGE_PROFICIENCY", columnDefinition = "INTEGER DEFAULT 1")
     private int proficiency;
+
+    public LanguageProficiencyDTO toDto() {
+        LanguageProficiencyDTO dto = new LanguageProficiencyDTO();
+        dto.setLanguage(this.getName());
+        dto.setProficiency(this.getProficiency());
+        return dto;
+    }
 }

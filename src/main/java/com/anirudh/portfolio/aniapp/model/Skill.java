@@ -1,5 +1,6 @@
 package com.anirudh.portfolio.aniapp.model;
 
+import com.anirudh.portfolio.aniapp.dto.SkillDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -16,4 +17,11 @@ public class Skill {
     private String name;
     @Column(name = "SKILL_PROFICIENCY", columnDefinition = "INTEGER DEFAULT 1")
     private int proficiency;
+
+    public SkillDTO toDto() {
+        SkillDTO dto = new SkillDTO();
+        dto.setSkillName(this.getName());
+        dto.setProficiency(this.getProficiency());
+        return dto;
+    }
 }
