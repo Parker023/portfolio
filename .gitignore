@@ -1,6 +1,9 @@
 HELP.md
 .gradle
 build/
+*.lock
+.gradle/*/*.lock
+.idea/workspace.xml
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -20,7 +23,9 @@ bin/
 ### IntelliJ IDEA ###
 .idea
 *.iws
+*.lock
 *.iml
+*.bin
 *.ipr
 out/
 !**/src/main/**/out/
