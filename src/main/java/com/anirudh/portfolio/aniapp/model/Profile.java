@@ -2,19 +2,24 @@ package com.anirudh.portfolio.aniapp.model;
 
 import com.anirudh.portfolio.aniapp.dto.ProfileDTO;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "PROFILE", schema = "portfolio")
 @Data
+@AllArgsConstructor
 @Builder
+@NoArgsConstructor
 public class Profile {
     @Id
+    @Builder.Default
     @Column(name = "PROFILE_ID")
-    private long profileId;
+    private long profileId=1L;
     @Column(name = "FIRST_NAME", nullable = false, length = 50)
     private String firstName;
     @Column(name = "LAST_NAME", length = 50)
