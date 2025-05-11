@@ -3,19 +3,23 @@ package com.anirudh.portfolio.aniapp.service.impl;
 import com.anirudh.portfolio.aniapp.dto.DefaultProperties;
 import com.anirudh.portfolio.aniapp.dto.LanguageProficiencyDTO;
 import com.anirudh.portfolio.aniapp.dto.ProfileDTO;
+import com.anirudh.portfolio.aniapp.dto.SkillDTO;
 import com.anirudh.portfolio.aniapp.exception.ProfileNotFoundException;
 import com.anirudh.portfolio.aniapp.model.LanguageProficiency;
 import com.anirudh.portfolio.aniapp.model.Profile;
+import com.anirudh.portfolio.aniapp.model.Skill;
 import com.anirudh.portfolio.aniapp.repository.ProfileRepository;
 import com.anirudh.portfolio.aniapp.service.ProfileService;
 import com.anirudh.portfolio.aniapp.util.GithubUtil;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
     @PostConstruct
     private void init() throws ProfileNotFoundException {
@@ -34,11 +38,6 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final DefaultProperties defaultProperties;
     private final ProfileRepository profileRepository;
-
-    public ProfileServiceImpl(DefaultProperties defaultProperties, ProfileRepository profileRepository) {
-        this.defaultProperties = defaultProperties;
-        this.profileRepository = profileRepository;
-    }
 
     @Override
     public void saveProfile(ProfileDTO dto) throws ProfileNotFoundException {
@@ -68,18 +67,34 @@ public class ProfileServiceImpl implements ProfileService {
         if (dto.getAbout() != null) profile.setAbout(dto.getAbout());
         if (dto.getLanguages() != null)
             profile.setLanguages(updateLanguageFromDto(dto.getLanguages(), profile.getLanguages()));
+        if (dto.getSkills() != null)
+            profile.setSkills(updateSkillsFromDto(dto.getSkills(), profile.getSkills()));
 
+    }
+
+    private List<Skill> updateSkillsFromDto(List<SkillDTO> dtos, List<Skill> skills) {
+        Map<String, Skill> langMap = skills.stream()
+                .collect(Collectors.toMap(
+                        skill -> skill.getName().toLowerCase(),
+                        skill -> skill,
+                        (existing, replacement) -> replacement
+                ));
+        dtos.stream()
+                .filter(Objects::nonNull)
+                .filter(dto -> langMap.containsKey(dto.getSkillName().toLowerCase()))
+                .forEach(dto -> {
+                    Skill entity = langMap.get(dto.getSkillName().toLowerCase());
+                    entity.setProficiency(dto.getProficiency());
+                });
+
+        return new ArrayList<>(langMap.values());
     }
 
     public List<LanguageProficiency> updateLanguageFromDto(List<LanguageProficiencyDTO> dtos, List<LanguageProficiency> languages) {
         Map<String, LanguageProficiency> langMap = languages.stream()
-                .map(dto -> {
-                    dto.setName(dto.getName().toLowerCase());
-                    return dto;
-                })
                 .collect(Collectors.toMap(
-                        LanguageProficiency::getName,
-                        dto -> dto,
+                        language -> language.getName().toLowerCase(),
+                        language -> language,
                         (existing, replacement) -> replacement
                 ));
         dtos.stream()
