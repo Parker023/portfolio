@@ -1,40 +1,64 @@
 package com.anirudh.portfolio.aniapp.model;
 
+import com.anirudh.portfolio.aniapp.dto.ProfileDTO;
+import com.anirudh.portfolio.aniapp.util.GithubUtil;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Entity
-@Table(name = "PROFILE",schema = "portfolio")
+@Table(name = "PROFILE", schema = "portfolio")
 @Data
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 public class Profile {
     @Id
-    @SequenceGenerator(name = "profile_generator", allocationSize = 5, sequenceName = "profile_sequence",schema = "portfolio")
-    @GeneratedValue(generator = "profile_generator", strategy = GenerationType.SEQUENCE)
+    @Builder.Default
     @Column(name = "PROFILE_ID")
-    private int profileId;
-    @Column(name = "FIRST_NAME",nullable = false,length = 50)
+    private long profileId = 1L;
+    @Column(name = "FIRST_NAME", nullable = false, length = 50)
     private String firstName;
     @Column(name = "LAST_NAME", length = 50)
     private String lastName;
     @Column(name = "TITLE", length = 100)
     private String title;
-    @Column(name = "ABOUT",nullable = false)
+    @Column(name = "ABOUT", nullable = false)
     private String about;
-    @Column(name = "EMAIL",nullable = false)
+    @Column(name = "EMAIL", nullable = false)
     private String email;
-    @Column(name = "PHONE",nullable = false)
+    @Column(name = "PHONE", nullable = false)
     private String phone;
     @Column(name = "GITHUB_LINK")
     private String github;
     @Column(name = "LINKEDIN_PROFILE")
     private String linkedin;
-    @OneToMany()
-    @JoinColumn(name = "PROFILE_ID_FK",referencedColumnName = "PROFILE_ID")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "PROFILE_ID_FK", referencedColumnName = "PROFILE_ID")
     private List<Skill> skills;
-    @OneToMany
-    @JoinColumn(name = "PROFILE_ID_FK",referencedColumnName = "PROFILE_ID")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "PROFILE_ID_FK", referencedColumnName = "PROFILE_ID")
     private List<LanguageProficiency> languages;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "resume_id")
+    private Resume resume;
 
-
+    public ProfileDTO toDto() {
+        ProfileDTO dto = new ProfileDTO();
+        dto.setAbout(this.getAbout());
+        dto.setEmail(this.getEmail());
+        dto.setGithub(GithubUtil.stringToList(this.getGithub()));
+        dto.setPhone(this.getPhone());
+        dto.setFirstName(this.getFirstName());
+        dto.setLastName(this.getLastName());
+        dto.setLinkedin(this.getLinkedin());
+        dto.setTitle(this.getTitle());
+        dto.setLanguages(this.getLanguages().stream().map(LanguageProficiency::toDto).toList());
+        dto.setSkills(this.getSkills().stream().map(Skill::toDto).toList());
+        return dto;
+    }
 }
