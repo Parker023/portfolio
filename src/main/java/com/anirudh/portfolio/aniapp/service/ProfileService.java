@@ -1,6 +1,8 @@
 package com.anirudh.portfolio.aniapp.service;
 
 import com.anirudh.portfolio.aniapp.dto.DefaultProperties;
+import com.anirudh.portfolio.aniapp.dto.ProfileDTO;
+import com.anirudh.portfolio.aniapp.exception.ProfileNotFoundException;
 import com.anirudh.portfolio.aniapp.model.Profile;
 import com.anirudh.portfolio.aniapp.repository.ProfileRepository;
 import com.anirudh.portfolio.aniapp.util.GithubUtil;
@@ -37,9 +39,9 @@ public class ProfileService {
         profileRepository.save(profile);
     }
 
-    public Optional<Profile> getProfile() {
-        Profile profile = profileRepository.findAll().getFirst();
-        return Optional.ofNullable(profile);
+    public ProfileDTO getProfile() throws ProfileNotFoundException {
+        Optional<ProfileDTO> profileDTO = profileRepository.findById(1L).map(Profile::toDto);
+        return profileDTO.orElseThrow(() -> new ProfileNotFoundException("No Profile Found"));
     }
 
 

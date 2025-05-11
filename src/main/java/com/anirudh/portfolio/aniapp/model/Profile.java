@@ -36,10 +36,10 @@ public class Profile {
     private String github;
     @Column(name = "LINKEDIN_PROFILE")
     private String linkedin;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     @JoinColumn(name = "PROFILE_ID_FK", referencedColumnName = "PROFILE_ID")
     private List<Skill> skills;
-    @OneToMany(cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     @JoinColumn(name = "PROFILE_ID_FK", referencedColumnName = "PROFILE_ID")
     private List<LanguageProficiency> languages;
 
