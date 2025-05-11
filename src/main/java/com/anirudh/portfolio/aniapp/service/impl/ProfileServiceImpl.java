@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
     @PostConstruct
-    private void init() throws ProfileNotFoundException {
+    private void init() {
         if (profileRepository.count() == 0) {
             ProfileDTO profile = ProfileDTO.builder()
                     .email(defaultProperties.getEmail())
@@ -36,7 +36,10 @@ public class ProfileServiceImpl implements ProfileService {
                     .github(defaultProperties.getGithub())
                     .linkedin(defaultProperties.getLinkedin())
                     .build();
-            saveProfile(profile);
+            Profile entity = new Profile();
+            updateProfileFromDto(entity, profile);
+            profileRepository.save(entity);
+
         }
     }
 
@@ -99,6 +102,8 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setLanguages(updateLanguageFromDto(dto.getLanguages(), profile.getLanguages()));
         if (dto.getSkills() != null)
             profile.setSkills(updateSkillsFromDto(dto.getSkills(), profile.getSkills()));
+        if (dto.getResumeDTO() != null)
+            profile.setResume(updateResumeFromDto(dto.getResumeDTO(), profile.getResume()));
 
     }
 
@@ -136,6 +141,13 @@ public class ProfileServiceImpl implements ProfileService {
                 });
 
         return new ArrayList<>(langMap.values());
+    }
+
+    public Resume updateResumeFromDto(ResumeDTO dto, Resume resume) {
+        resume.setFileData(dto.getBytes());
+        resume.setFileName(dto.getResumeName());
+        resume.setFileType(dto.getResumeType());
+        return resume;
     }
 
 }
