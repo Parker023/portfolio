@@ -3,12 +3,16 @@ package com.anirudh.portfolio.aniapp.controller;
 import com.anirudh.portfolio.aniapp.dto.ProfileDTO;
 import com.anirudh.portfolio.aniapp.dto.ResponseDTO;
 import com.anirudh.portfolio.aniapp.exception.ProfileNotFoundException;
+import com.anirudh.portfolio.aniapp.model.Resume;
 import com.anirudh.portfolio.aniapp.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequestMapping("/api/portfolio")
 @RestController
@@ -35,5 +39,20 @@ public class PortfolioController {
                 .profileDTO(dto)
                 .status(HttpStatus.OK.value())
                 .build());
+    }
+    @PostMapping("/{profileId}/resume")
+    public ResponseEntity<Resume> uploadResume(@PathVariable Long profileId, @RequestParam MultipartFile file) throws IOException {
+        // Save the Resume and associate it with the Profile
+        Resume uploadedResume = profileService.saveProfileWithResume(file);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(uploadedResume);
+    }
+
+    @GetMapping("/{profileId}/resume")
+    public ResponseEntity<Resume> getResume(@PathVariable Long profileId) {
+        // Retrieve the Resume for the Profile
+        Resume resume = profileService.getResume(profileId);
+
+        return ResponseEntity.ok(resume);
     }
 }

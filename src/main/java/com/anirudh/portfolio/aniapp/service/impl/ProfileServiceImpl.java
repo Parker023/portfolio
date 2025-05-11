@@ -7,6 +7,7 @@ import com.anirudh.portfolio.aniapp.dto.SkillDTO;
 import com.anirudh.portfolio.aniapp.exception.ProfileNotFoundException;
 import com.anirudh.portfolio.aniapp.model.LanguageProficiency;
 import com.anirudh.portfolio.aniapp.model.Profile;
+import com.anirudh.portfolio.aniapp.model.Resume;
 import com.anirudh.portfolio.aniapp.model.Skill;
 import com.anirudh.portfolio.aniapp.repository.ProfileRepository;
 import com.anirudh.portfolio.aniapp.service.ProfileService;
@@ -14,6 +15,7 @@ import com.anirudh.portfolio.aniapp.util.GithubUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,17 +25,19 @@ import java.util.stream.Collectors;
 public class ProfileServiceImpl implements ProfileService {
     @PostConstruct
     private void init() throws ProfileNotFoundException {
-        ProfileDTO profile = ProfileDTO.builder()
-                .email(defaultProperties.getEmail())
-                .about(defaultProperties.getAbout())
-                .phone(defaultProperties.getPhone())
-                .title(defaultProperties.getTitle())
-                .firstName(defaultProperties.getFirstname())
-                .lastName(defaultProperties.getLastname())
-                .github(defaultProperties.getGithub())
-                .linkedin(defaultProperties.getLinkedin())
-                .build();
-        saveProfile(profile);
+        if (profileRepository.count() == 0) {
+            ProfileDTO profile = ProfileDTO.builder()
+                    .email(defaultProperties.getEmail())
+                    .about(defaultProperties.getAbout())
+                    .phone(defaultProperties.getPhone())
+                    .title(defaultProperties.getTitle())
+                    .firstName(defaultProperties.getFirstname())
+                    .lastName(defaultProperties.getLastname())
+                    .github(defaultProperties.getGithub())
+                    .linkedin(defaultProperties.getLinkedin())
+                    .build();
+            saveProfile(profile);
+        }
     }
 
     private final DefaultProperties defaultProperties;
@@ -49,6 +53,11 @@ public class ProfileServiceImpl implements ProfileService {
     @Override
     public ProfileDTO getProfile() throws ProfileNotFoundException {
         return findProfile().toDto();
+    }
+
+    @Override
+    public Resume saveProfileWithResume(MultipartFile file) {
+        return null;
     }
 
     public Profile findProfile() throws ProfileNotFoundException {

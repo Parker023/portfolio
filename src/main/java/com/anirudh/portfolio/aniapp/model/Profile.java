@@ -1,6 +1,7 @@
 package com.anirudh.portfolio.aniapp.model;
 
 import com.anirudh.portfolio.aniapp.dto.ProfileDTO;
+import com.anirudh.portfolio.aniapp.util.GithubUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ public class Profile {
     @Id
     @Builder.Default
     @Column(name = "PROFILE_ID")
-    private long profileId=1L;
+    private long profileId = 1L;
     @Column(name = "FIRST_NAME", nullable = false, length = 50)
     private String firstName;
     @Column(name = "LAST_NAME", length = 50)
@@ -36,18 +37,21 @@ public class Profile {
     private String github;
     @Column(name = "LINKEDIN_PROFILE")
     private String linkedin;
-    @OneToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "PROFILE_ID_FK", referencedColumnName = "PROFILE_ID")
     private List<Skill> skills;
-    @OneToMany(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "PROFILE_ID_FK", referencedColumnName = "PROFILE_ID")
     private List<LanguageProficiency> languages;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "resume_id")
+    private Resume resume;
 
     public ProfileDTO toDto() {
         ProfileDTO dto = new ProfileDTO();
         dto.setAbout(this.getAbout());
         dto.setEmail(this.getEmail());
-        dto.setGithub(this.getGithub());
+        dto.setGithub(GithubUtil.stringToList(this.getGithub()));
         dto.setPhone(this.getPhone());
         dto.setFirstName(this.getFirstName());
         dto.setLastName(this.getLastName());
