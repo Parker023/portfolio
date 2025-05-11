@@ -8,9 +8,11 @@ import lombok.Data;
 public class ResponseDTO {
     private String message;
     private int status;
+    private ProfileDTO profileDTO;
 
-    public ResponseDTO(String message, int statusCode) {
-        this.message=message;
-        this.status=statusCode;
+    public ResponseDTO(String message, int statusCode, ProfileDTO profileDTO) {
+        this.message = message;
+        this.status = statusCode;
+        this.profileDTO = profileDTO;
     }
 }

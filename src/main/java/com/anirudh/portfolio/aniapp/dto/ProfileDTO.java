@@ -3,10 +3,12 @@ package com.anirudh.portfolio.aniapp.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 @Data
+@Builder
 public class ProfileDTO {
     @NotBlank(message = "first name should not be blank")
     private String firstName;
@@ -24,7 +26,7 @@ public class ProfileDTO {
     @Pattern(regexp = "\\d{10}", message = "phone number is not valid")
     private String phone;
 
-    private String github;
+    private List<String> github;
     private String linkedin;
 
     private List<SkillDTO> skills;
