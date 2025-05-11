@@ -3,6 +3,7 @@ package com.anirudh.portfolio.aniapp.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 @Data
 @Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class ProfileDTO {
     @NotBlank(message = "first name should not be blank")
