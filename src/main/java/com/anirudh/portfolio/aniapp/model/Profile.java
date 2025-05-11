@@ -2,6 +2,7 @@ package com.anirudh.portfolio.aniapp.model;
 
 import com.anirudh.portfolio.aniapp.dto.ProfileDTO;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -9,10 +10,9 @@ import java.util.List;
 @Entity
 @Table(name = "PROFILE", schema = "portfolio")
 @Data
+@Builder
 public class Profile {
     @Id
-    @SequenceGenerator(name = "profile_generator", allocationSize = 5, sequenceName = "profile_sequence", schema = "portfolio")
-    @GeneratedValue(generator = "profile_generator", strategy = GenerationType.SEQUENCE)
     @Column(name = "PROFILE_ID")
     private long profileId;
     @Column(name = "FIRST_NAME", nullable = false, length = 50)
