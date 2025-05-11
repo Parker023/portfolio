@@ -2,12 +2,14 @@ package com.anirudh.portfolio.aniapp.controller;
 
 import com.anirudh.portfolio.aniapp.dto.ProfileDTO;
 import com.anirudh.portfolio.aniapp.dto.ResponseDTO;
+import com.anirudh.portfolio.aniapp.dto.ResumeDTO;
 import com.anirudh.portfolio.aniapp.exception.ProfileNotFoundException;
-import com.anirudh.portfolio.aniapp.model.Resume;
 import com.anirudh.portfolio.aniapp.service.ProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,18 +42,20 @@ public class PortfolioController {
                 .status(HttpStatus.OK.value())
                 .build());
     }
-    @PostMapping("/{profileId}/resume")
-    public ResponseEntity<Resume> uploadResume(@PathVariable Long profileId, @RequestParam MultipartFile file) throws IOException {
-        // Save the Resume and associate it with the Profile
-        Resume uploadedResume = profileService.saveProfileWithResume(file);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(uploadedResume);
+    @PostMapping("/resume")
+    public ResponseEntity<ResumeDTO> uploadResume(@RequestParam MultipartFile file) throws ProfileNotFoundException {
+        profileService.saveProfileWithResume(file);
+        ResumeDTO resume = profileService.getProfile().getResumeDTO();
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resume.getResumeName() + "\"")
+                .body(resume);
     }
 
-    @GetMapping("/{profileId}/resume")
-    public ResponseEntity<Resume> getResume(@PathVariable Long profileId) {
-        // Retrieve the Resume for the Profile
-        Resume resume = profileService.getResume(profileId);
+    @GetMapping("/resume")
+    public ResponseEntity<ResumeDTO> getResume() throws ProfileNotFoundException {
+        ResumeDTO resume = profileService.getResume();
 
         return ResponseEntity.ok(resume);
     }

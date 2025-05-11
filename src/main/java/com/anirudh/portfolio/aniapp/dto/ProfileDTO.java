@@ -33,5 +33,6 @@ public class ProfileDTO {
 
     private List<SkillDTO> skills;
     private List<LanguageProficiencyDTO> languages;
+    private ResumeDTO resumeDTO;
 
 }

@@ -1,9 +1,7 @@
 package com.anirudh.portfolio.aniapp.service.impl;
 
-import com.anirudh.portfolio.aniapp.dto.DefaultProperties;
-import com.anirudh.portfolio.aniapp.dto.LanguageProficiencyDTO;
-import com.anirudh.portfolio.aniapp.dto.ProfileDTO;
-import com.anirudh.portfolio.aniapp.dto.SkillDTO;
+import com.anirudh.portfolio.aniapp.dto.*;
+import com.anirudh.portfolio.aniapp.exception.InvalidResumeException;
 import com.anirudh.portfolio.aniapp.exception.ProfileNotFoundException;
 import com.anirudh.portfolio.aniapp.model.LanguageProficiency;
 import com.anirudh.portfolio.aniapp.model.Profile;
@@ -17,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,14 +50,35 @@ public class ProfileServiceImpl implements ProfileService {
         profileRepository.save(profile);
     }
 
+    private void saveProfile(Profile profile) throws ProfileNotFoundException {
+        profileRepository.save(profile);
+    }
+
     @Override
     public ProfileDTO getProfile() throws ProfileNotFoundException {
         return findProfile().toDto();
     }
 
     @Override
-    public Resume saveProfileWithResume(MultipartFile file) {
-        return null;
+    public void saveProfileWithResume(MultipartFile file) {
+
+        try {
+            Resume resume = new Resume();
+            resume.setFileName(file.getOriginalFilename());
+            resume.setFileType(file.getContentType());
+            resume.setFileData(file.getBytes());
+            resume.setUploadDate(LocalDateTime.now());
+            Profile profile = findProfile();
+            profile.setResume(resume);
+            saveProfile(profile);
+        } catch (IOException | ProfileNotFoundException e) {
+            throw new InvalidResumeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ResumeDTO getResume() throws ProfileNotFoundException {
+        return findProfile().getResume().toDTO();
     }
 
     public Profile findProfile() throws ProfileNotFoundException {

@@ -1,6 +1,7 @@
 package com.anirudh.portfolio.aniapp.exception.handler;
 
 import com.anirudh.portfolio.aniapp.dto.ErrorResponse;
+import com.anirudh.portfolio.aniapp.exception.InvalidResumeException;
 import com.anirudh.portfolio.aniapp.exception.ProfileNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,13 @@ public class PortfolioExceptionHandler {
                 .message("NPE occurred")
                 .details(List.of(exception.getMessage()))
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value()).build()));
+    }
+
+    @ExceptionHandler(value = {InvalidResumeException.class})
+    public ResponseEntity<ErrorResponse> resumeEx(InvalidResumeException exception) {
+        return ResponseEntity.of(Optional.of(ErrorResponse.builder()
+                .message("Resume Not Valid")
+                .details(List.of(exception.getMessage()))
+                .status(HttpStatus.BAD_REQUEST.value()).build()));
     }
 }
